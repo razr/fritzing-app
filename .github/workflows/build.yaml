@@ -19,6 +19,11 @@ jobs:
         repository: fritzing/fritzing-parts
         path: fritzing-parts
 
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # Provides a stable environment for aqtinstall
+
     - name: Install Qt Framework
       uses: jurplel/install-qt-action@v3
       with:
