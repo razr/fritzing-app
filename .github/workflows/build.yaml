@@ -43,7 +43,7 @@ jobs:
     - name: Install Qt Framework
       uses: jurplel/install-qt-action@v3
       with:
-        version: '5.15.2' # The stable Qt version Fritzing needs
+        version: '6.5.3'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
@@ -58,21 +58,21 @@ jobs:
         Rename-Item -Path "boost_1_92_0" -NewName "boost"
         Remove-Item "boost.zip"
 
+    - name: Clone and Build Libgit2
+      run: |
+        git clone --branch v0.28.5 https://github.com/libgit2/libgit2.git
+        cd libgit2
+        mkdir build64
+        cd build64
+        cmake .. -G "MinGW Makefiles" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_CLAR=OFF
+        cmake --build . --config Release
+
     - name: Setup Custom tmate Session
       if: ${{ inputs.enable_ssh == true }}
       uses: mxschmitt/action-tmate@v3
       with:
         # Change this to false to restore the browser web link
         limit-access-to-actor: false
-
-    - name: Clone and Build Libgit2
-      run: |
-        git clone --branch v0.28.5 https://github.com
-        cd libgit2
-        mkdir build64
-        cd build64
-        cmake .. -G "Visual Studio 17 2022" -A x64 -DBUILD_SHARED_LIBS=ON -DBUILD_CLAR=OFF
-        cmake --build . --config Release
 
     - name: Compile Fritzing App
       shell: cmd
