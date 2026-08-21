@@ -61,8 +61,6 @@ jobs:
     - name: Setup Interactive SSH Window
       if: ${{ inputs.enable_ssh == true }}
       uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: true
 
     - name: Clone and Build Libgit2
       run: |
