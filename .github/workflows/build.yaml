@@ -42,14 +42,22 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2019_64'
 
-    - name: Download Boost Libraries
+    - name: Download and Fast Extract Boost
       shell: powershell
       run: |
-        $url = "https://archives.boost.io/release/1.92.0/source/boost_1_92_0.zip"
+        # Disable the progress bar to speed up the network download
+        $ProgressPreference = 'SilentlyContinue'
+        $url = "https://boost.io"
         Invoke-WebRequest -Uri $url -OutFile "boost.zip"
-        Expand-Archive -Path "boost.zip" -DestinationPath "."
+        
+        # Use pre-installed 7-Zip for high-speed extraction (much faster than Expand-Archive)
+        & "C:\Program Files\7-Zip\7z.exe" x boost.zip -y | Out-Null
+        
+        # Rename the output folder to match what qmake expects
         Rename-Item -Path "boost_1_92_0" -NewName "boost"
-
+        
+        # Clean up the original ZIP file to reclaim storage space on the runner
+        Remove-Item "boost.zip"
 
     - name: Clone and Build Libgit2
       run: |
