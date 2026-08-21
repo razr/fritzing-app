@@ -31,7 +31,6 @@ jobs:
         $newPath = ($oldPath -split ';' | Where-Object { $_ -notlike "*WindowsApps*" }) -join ';'
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
         
-        # Также очищаем пути для текущей сессии процесса GitHub Actions
         $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -notlike "*WindowsApps*" }) -join ';'
         echo "PATH=$env:PATH" >> $env:GITHUB_ENV
 
@@ -44,10 +43,13 @@ jobs:
         arch: 'win64_msvc2019_64'
 
     - name: Download Boost Libraries
+      shell: powershell
       run: |
-        Invoke-WebRequest -Uri "https://jfrog.io" -OutFile "boost.zip"
+        $url = "https://archives.boost.io/release/1.92.0/source/boost_1_92_0.zip"
+        Invoke-WebRequest -Uri $url -OutFile "boost.zip"
         Expand-Archive -Path "boost.zip" -DestinationPath "."
-        Rename-Item -Path "boost_1_78_0" -NewName "boost"
+        Rename-Item -Path "boost_1_92_0" -NewName "boost"
+
 
     - name: Clone and Build Libgit2
       run: |
