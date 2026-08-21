@@ -64,7 +64,11 @@ jobs:
         cd libgit2
         mkdir build64
         cd build64
-        cmake .. -G "MinGW Makefiles" -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_CLAR=OFF
+        cmake .. -G "MinGW Makefiles" \
+          "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DBUILD_SHARED_LIBS=ON \
+          -DBUILD_CLAR=OFF
         cmake --build . --config Release
 
     - name: Setup Custom tmate Session
