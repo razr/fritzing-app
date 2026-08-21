@@ -1,7 +1,13 @@
 name: Build Fritzing for Windows
 
 on:
-  workflow_dispatch: # Allows you to manually click a button to start the build
+  workflow_dispatch:
+    inputs:
+      enable_ssh:
+        description: 'Do you want to pause and open an SSH debug terminal?'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   build-windows:
@@ -53,6 +59,7 @@ jobs:
         Remove-Item "boost.zip"
 
     - name: Setup Interactive SSH Window
+      if: ${{ inputs.enable_ssh == true }}
       uses: mxschmitt/action-tmate@v3
       with:
         limit-access-to-actor: true
