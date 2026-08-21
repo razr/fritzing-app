@@ -24,6 +24,17 @@ jobs:
       with:
         python-version: '3.11' # Provides a stable environment for aqtinstall
 
+    - name: Remove WindowsApps from PATH
+      shell: powershell
+      run: |
+        $oldPath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
+        $newPath = ($oldPath -split ';' | Where-Object { $_ -notlike "*WindowsApps*" }) -join ';'
+        [Environment]::SetEnvironmentVariable("PATH", $newPath, "Machine")
+        
+        # Также очищаем пути для текущей сессии процесса GitHub Actions
+        $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -notlike "*WindowsApps*" }) -join ';'
+        echo "PATH=$env:PATH" >> $env:GITHUB_ENV
+
     - name: Install Qt Framework
       uses: jurplel/install-qt-action@v3
       with:
