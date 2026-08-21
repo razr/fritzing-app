@@ -58,9 +58,12 @@ jobs:
         Rename-Item -Path "boost_1_92_0" -NewName "boost"
         Remove-Item "boost.zip"
 
-    - name: Setup Interactive SSH Window
+    - name: Setup Custom tmate Session
       if: ${{ inputs.enable_ssh == true }}
       uses: mxschmitt/action-tmate@v3
+      with:
+        # Change this to false to restore the browser web link
+        limit-access-to-actor: false
 
     - name: Clone and Build Libgit2
       run: |
